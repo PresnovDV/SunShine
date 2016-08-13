@@ -319,8 +319,6 @@ public class ForecastFragment extends Fragment {
             super.onPostExecute(strings);
             fcAdapter.clear();
             fcAdapter.addAll(strings);
-            Log.v("count",String.valueOf(fcAdapter.getCount()));
-
         }
     }
 }
