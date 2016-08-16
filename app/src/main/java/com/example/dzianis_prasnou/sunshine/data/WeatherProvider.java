@@ -117,9 +117,9 @@ public class WeatherProvider extends ContentProvider {
     public static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         matcher.addURI(WeatherContract.CONTENT_AUTHORITY, WeatherContract.PATH_WEATHER ,WEATHER);
-        matcher.addURI(WeatherContract.CONTENT_AUTHORITY, WeatherContract.PATH_WEATHER ,WEATHER_WITH_LOCATION);
-        matcher.addURI(WeatherContract.CONTENT_AUTHORITY,"" ,WEATHER_WITH_LOCATION_AND_DATE);
-        matcher.addURI(WeatherContract.CONTENT_AUTHORITY, WeatherContract.PATH_LOCATION + "/*",LOCATION);
+        matcher.addURI(WeatherContract.CONTENT_AUTHORITY, WeatherContract.PATH_WEATHER + "/*", WEATHER_WITH_LOCATION);
+        matcher.addURI(WeatherContract.CONTENT_AUTHORITY,WeatherContract.PATH_WEATHER + "/*/#" ,WEATHER_WITH_LOCATION_AND_DATE);
+        matcher.addURI(WeatherContract.CONTENT_AUTHORITY, WeatherContract.PATH_LOCATION, LOCATION);
 
 
         // 3) Return the new matcher!
