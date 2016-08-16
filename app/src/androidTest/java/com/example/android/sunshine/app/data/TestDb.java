@@ -15,9 +15,15 @@
  */
 package com.example.android.sunshine.app.data;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 
+import com.example.dzianis_prasnou.sunshine.data.WeatherContract;
 import com.example.dzianis_prasnou.sunshine.data.WeatherDbHelper;
+
+import java.util.HashSet;
 
 public class TestDb extends AndroidTestCase {
 
@@ -89,18 +95,18 @@ public class TestDb extends AndroidTestCase {
         locationColumnHashSet.add(WeatherContract.LocationEntry.COLUMN_COORD_LONG);
         locationColumnHashSet.add(WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING);
 
-//        int columnNameIndex = c.getColumnIndex("name");
-//        do {
-//            String columnName = c.getString(columnNameIndex);
-//            locationColumnHashSet.remove(columnName);
-//        } while(c.moveToNext());
-//
-//        // if this fails, it means that your database doesn't contain all of the required location
-//        // entry columns
-//        assertTrue("Error: The database doesn't contain all of the required location entry columns",
-//                locationColumnHashSet.isEmpty());
-//        db.close();
-//    }
+        int columnNameIndex = c.getColumnIndex("name");
+        do {
+            String columnName = c.getString(columnNameIndex);
+            locationColumnHashSet.remove(columnName);
+        } while(c.moveToNext());
+
+        // if this fails, it means that your database doesn't contain all of the required location
+        // entry columns
+        assertTrue("Error: The database doesn't contain all of the required location entry columns",
+                locationColumnHashSet.isEmpty());
+        db.close();
+    }
 
     /*
         Students:  Here is where you will build code to test that we can insert and query the
@@ -109,23 +115,26 @@ public class TestDb extends AndroidTestCase {
         also make use of the ValidateCurrentRecord function from within TestUtilities.
     */
     public void testLocationTable() {
-        // First step: Get reference to writable database
 
-        // Create ContentValues of what you want to insert
-        // (you can use the createNorthPoleLocationValues if you wish)
+        mContext.deleteDatabase(WeatherDbHelper.DATABASE_NAME);
+        SQLiteDatabase db = new WeatherDbHelper(
+                this.mContext).getWritableDatabase();
+        assertEquals(true, db.isOpen());
 
-        // Insert ContentValues into database and get a row ID back
+        ContentValues contentValues = TestUtilities.createNorthPoleLocationValues();
+        Long rowNum = db.insert(WeatherContract.LocationEntry.TABLE_NAME, null, contentValues);
 
         // Query the database and receive a Cursor back
+        Cursor c = db.rawQuery("SELECT * FROM " + WeatherContract.LocationEntry.TABLE_NAME, null);
 
         // Move the cursor to a valid database row
+        c.moveToFirst();
 
-        // Validate data in resulting Cursor with the original ContentValues
-        // (you can use the validateCurrentRecord function in TestUtilities to validate the
-        // query if you like)
+        TestUtilities.validateCurrentRecord("err",c,contentValues);
 
         // Finally, close the cursor and database
-
+        c.close();
+        db.close();
     }
 
     /*
