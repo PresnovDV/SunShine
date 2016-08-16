@@ -11,8 +11,6 @@ import android.os.HandlerThread;
 import android.test.AndroidTestCase;
 
 import com.example.android.sunshine.app.utils.PollingCheck;
-import com.example.dzianis_prasnou.sunshine.data.WeatherContract;
-import com.example.dzianis_prasnou.sunshine.data.WeatherDbHelper;
 
 import java.util.Map;
 import java.util.Set;
