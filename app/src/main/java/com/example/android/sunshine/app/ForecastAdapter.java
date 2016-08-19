@@ -21,14 +21,6 @@ public class ForecastAdapter extends CursorAdapter {
     private static final int VIEW_TYPE_TODAY = 0;
     private static final int VIEW_TYPE_FUTURE_DAY = 1;
     private static final int VIEW_TYPE_COUNT = 2;
-    /**
-     * Prepare the weather high/lows for presentation.
-     */
-    private String formatHighLows(double high, double low) {
-        boolean isMetric = Utility.isMetric(mContext);
-        String highLowStr = Utility.formatTemperature(mContext, high, isMetric) + "/" + Utility.formatTemperature(mContext, low, isMetric);
-        return highLowStr;
-    }
 
 
     @Override
@@ -68,8 +60,22 @@ public class ForecastAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_ID);
-        viewHolder.iconView.setImageResource(R.drawable.ic_weather);
+        int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
+        // Choose the layout type
+        int viewType = getItemViewType(cursor.getPosition());
+        int iconId = -1;
+        switch (viewType) {
+            case VIEW_TYPE_TODAY: {
+                iconId = Utility.getArtResourceForWeatherCondition(weatherId);
+                break;
+            }
+            case VIEW_TYPE_FUTURE_DAY: {
+                iconId = Utility.getIconResourceForWeatherCondition(weatherId);
+                break;
+            }
+        }
+
+        viewHolder.iconView.setImageResource(iconId);
 
         // date
         long date = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);

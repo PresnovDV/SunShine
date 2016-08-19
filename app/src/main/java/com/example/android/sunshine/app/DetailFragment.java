@@ -31,6 +31,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private final int FORECAST_DETAIL_LOADER_ID = 1;
     private String mForecastStr;
     ShareActionProvider mShareActionProvider;
+    private Uri mUri;
 
     private static final String[] FORECAST_DETAIL_COLUMNS = {
             WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
@@ -76,9 +77,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_detail, container, false);
     }
 
     @Override
@@ -106,9 +105,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Intent intent = getActivity().getIntent();
-        String uriStr = intent.getDataString();
+        if (intent != null || intent.getData() == null){
+            return  null;
+        }
 
-        return new CursorLoader(getActivity(), Uri.parse(uriStr), FORECAST_DETAIL_COLUMNS, null, null, null);
+        return new CursorLoader(getActivity(), intent.getData(), FORECAST_DETAIL_COLUMNS, null, null, null);
     }
 
     @Override
@@ -136,7 +137,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             // Humidity
             float humidity = data.getFloat(COL_WEATHER_COLUMN_HUMIDITY);
             TextView humidityView = (TextView) getActivity().findViewById(R.id.list_item_humidity_textview);
-            humidityView.setText(getContext().getString(R.string.format_humidity, humidity));
+            humidityView.setText(String.format(getContext().getString(R.string.format_humidity), humidity));
 
             // Wind
             float wind_speed = data.getFloat(COL_WEATHER_COLUMN_WIND_SPEED);
@@ -147,13 +148,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             // Pressure
             float pressure = data.getFloat(COL_WEATHER_COLUMN_PRESSURE);
             TextView pressureView = (TextView) getActivity().findViewById(R.id.list_item_pressure_textview);
-            pressureView.setText(getContext().getString(R.string.format_pressure, pressure));
+            pressureView.setText(String.format(getContext().getString(R.string.format_pressure), pressure));
 
             // right column
             // icon
-            int weatherId = data.getInt(COL_WEATHER_ID);
+            int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
             ImageView iconView = (ImageView) getActivity().findViewById(R.id.list_item_icon);
-            iconView.setImageResource(R.drawable.ic_weather); // todo
+            iconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
 
             // weather forecast
             String forecast = data.getString(COL_WEATHER_DESC);
@@ -168,6 +169,17 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        //
+    }
 
+    void onLocationChanged( String newLocation ) {
+        // replace the uri, since the location has changed
+        Uri uri = mUri;
+        if (null != uri) {
+            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
+            Uri updatedUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
+            mUri = updatedUri;
+            getLoaderManager().restartLoader(FORECAST_DETAIL_LOADER_ID, null, this);
+        }
     }
 }

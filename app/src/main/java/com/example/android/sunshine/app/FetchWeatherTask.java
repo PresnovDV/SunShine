@@ -71,7 +71,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
                 new String[]{locationSetting},
                 null);
 
-        if (cur.moveToFirst()){
+        if (cur != null && cur.moveToFirst()){
             int columnIdIndex = cur.getColumnIndex(WeatherContract.LocationEntry._ID);
             rowId = cur.getLong(columnIdIndex);
         }
@@ -84,7 +84,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
 
             Uri resUri = mContext.getContentResolver().insert(WeatherContract.LocationEntry.CONTENT_URI, values);
             rowId = Long.parseLong(resUri.getLastPathSegment());
-        };
+        }
 
         return rowId;
     }
