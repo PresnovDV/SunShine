@@ -27,6 +27,7 @@ import com.example.android.sunshine.app.data.WeatherContract;
  */
 public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String LOG_TAG = DetailFragment.class.getSimpleName();
+    public static final String DETAIL_URI = "URI";
     private static final String FORECAST_SHARE_HASHTAG = "#SunshineApp";
     private final int FORECAST_DETAIL_LOADER_ID = 1;
     private String mForecastStr;
@@ -77,6 +78,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
+        }
         return inflater.inflate(R.layout.fragment_detail, container, false);
     }
 
@@ -104,12 +109,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Intent intent = getActivity().getIntent();
-        if (intent != null || intent.getData() == null){
-            return  null;
+        if(mUri != null){
+            return new CursorLoader(getActivity(), mUri, FORECAST_DETAIL_COLUMNS, null, null, null);
         }
-
-        return new CursorLoader(getActivity(), intent.getData(), FORECAST_DETAIL_COLUMNS, null, null, null);
+        return null;
     }
 
     @Override
