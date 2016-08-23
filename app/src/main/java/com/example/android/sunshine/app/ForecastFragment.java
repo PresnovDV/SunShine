@@ -31,6 +31,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private ListView mListView;
     private int mPosition = ListView.INVALID_POSITION;
     private static final String SELECTED_KEY = "selected_position";
+    private boolean mUseSpecialTodayLayout;
 
     public interface Callback {
         /**
@@ -120,6 +121,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
+        mForecastAdapter.setUseSpecialTodayLayout(mUseSpecialTodayLayout);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
@@ -171,6 +173,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mForecastAdapter.swapCursor(data);
+        if (mPosition != ListView.INVALID_POSITION) {
+            mListView.smoothScrollToPosition(mPosition);
+        }
     }
 
     @Override
@@ -192,5 +197,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             outState.putInt(SELECTED_KEY, mPosition);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    public void setUseSpecialTodayLayout(boolean isSpecTodayLayout){
+        mUseSpecialTodayLayout = isSpecTodayLayout;
+        if(mForecastAdapter != null){
+            mForecastAdapter.setUseSpecialTodayLayout(mUseSpecialTodayLayout);
+        }
     }
 }

@@ -122,46 +122,46 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             // left column
             // date
             long date = data.getLong(COL_WEATHER_DATE);
-            TextView dayView = (TextView) getActivity().findViewById(R.id.list_item_day_textview);
+            TextView dayView = (TextView) getActivity().findViewById(R.id.detail_day_textview);
             dayView.setText(Utility.getDayName(getActivity(), date));
-            TextView dateView = (TextView) getActivity().findViewById(R.id.list_item_date_textview);
+            TextView dateView = (TextView) getActivity().findViewById(R.id.detail_date_textview);
             dateView.setText(Utility.getFormattedMonthDay(getActivity(), date));
             // high / low temp
             boolean isMetric = Utility.isMetric(getActivity());
 
             double high = data.getDouble(COL_WEATHER_MAX_TEMP);
-            TextView highTempView = (TextView) getActivity().findViewById(R.id.list_item_high_textview);
+            TextView highTempView = (TextView) getActivity().findViewById(R.id.detail_high_textview);
             highTempView.setText(Utility.formatTemperature(getContext(), high, isMetric));
 
             double low = data.getDouble(COL_WEATHER_MIN_TEMP);
-            TextView lowTempView = (TextView) getActivity().findViewById(R.id.list_item_low_textview);
+            TextView lowTempView = (TextView) getActivity().findViewById(R.id.detail_low_textview);
             lowTempView.setText(Utility.formatTemperature(getContext(), low, isMetric));
 
             // Humidity
             float humidity = data.getFloat(COL_WEATHER_COLUMN_HUMIDITY);
-            TextView humidityView = (TextView) getActivity().findViewById(R.id.list_item_humidity_textview);
+            TextView humidityView = (TextView) getActivity().findViewById(R.id.detail_humidity_textview);
             humidityView.setText(String.format(getContext().getString(R.string.format_humidity), humidity));
 
             // Wind
             float wind_speed = data.getFloat(COL_WEATHER_COLUMN_WIND_SPEED);
             float wind_dir = data.getFloat(COL_WEATHER_COLUMN_DEGREES);
-            TextView windView = (TextView) getActivity().findViewById(R.id.list_item_wind_textview);
+            TextView windView = (TextView) getActivity().findViewById(R.id.detail_wind_textview);
             windView.setText(Utility.getFormattedWind(getContext(),wind_speed,wind_dir));
 
             // Pressure
             float pressure = data.getFloat(COL_WEATHER_COLUMN_PRESSURE);
-            TextView pressureView = (TextView) getActivity().findViewById(R.id.list_item_pressure_textview);
+            TextView pressureView = (TextView) getActivity().findViewById(R.id.detail_pressure_textview);
             pressureView.setText(String.format(getContext().getString(R.string.format_pressure), pressure));
 
             // right column
             // icon
             int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
-            ImageView iconView = (ImageView) getActivity().findViewById(R.id.list_item_icon);
+            ImageView iconView = (ImageView) getActivity().findViewById(R.id.detail_icon);
             iconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
 
             // weather forecast
             String forecast = data.getString(COL_WEATHER_DESC);
-            TextView descriptionView = (TextView) getActivity().findViewById(R.id.list_item_forecast_textview);
+            TextView descriptionView = (TextView) getActivity().findViewById(R.id.detail_forecast_textview);
             descriptionView.setText(forecast);
         }
 

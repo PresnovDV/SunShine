@@ -14,6 +14,8 @@ import android.widget.TextView;
  * from a {@link android.database.Cursor} to a {@link android.widget.ListView}.
  */
 public class ForecastAdapter extends CursorAdapter {
+    private boolean mUseSpecialTodayLayout;
+
     public ForecastAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
@@ -22,10 +24,13 @@ public class ForecastAdapter extends CursorAdapter {
     private static final int VIEW_TYPE_FUTURE_DAY = 1;
     private static final int VIEW_TYPE_COUNT = 2;
 
+    public void setUseSpecialTodayLayout(boolean isSpecTodayLayout){
+        mUseSpecialTodayLayout = isSpecTodayLayout;
+    }
 
     @Override
     public int getItemViewType(int position) {
-        return position == 0 ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
+        return (position == 0 && mUseSpecialTodayLayout) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
     }
 
     @Override
