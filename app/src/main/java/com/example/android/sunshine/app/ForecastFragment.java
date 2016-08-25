@@ -1,11 +1,9 @@
 package com.example.android.sunshine.app;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -102,19 +100,23 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void showMap() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = Utility.getPreferredLocation(getContext());
+        Cursor cursor = mForecastAdapter.getCursor();
+        if (cursor != null) {
+            cursor.moveToFirst();
+            String lon = cursor.getString(COL_COORD_LONG);
+            String lat = cursor.getString(COL_COORD_LAT);
 
-        Uri.Builder uriBuilder = new Uri.Builder();
-        uriBuilder.encodedPath("geo:0,0");
-        uriBuilder.appendQueryParameter("q",location+"(Here!)");
-        uriBuilder.appendQueryParameter("z","5");
-        Uri geoLocation = Uri.parse(uriBuilder.toString());
+            String path = "geo:"+lat+","+lon;
+            Uri.Builder uriBuilder = new Uri.Builder();
+            uriBuilder.encodedPath(path);
+            uriBuilder.appendQueryParameter("z", "12");
+            Uri geoLocation = Uri.parse(uriBuilder.toString());
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(geoLocation);
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivity(intent);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(geoLocation);
+            if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                startActivity(intent);
+            }
         }
     }
 
@@ -153,17 +155,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
 
     private void updateWeather() {
-/*
-        String location = Utility.getPreferredLocation(getActivity());
-        Intent intent = new Intent(getActivity(),SunshineService.AlarmReceiver.class);
-        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,location);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
-
-        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), alarmIntent);
-*/
         SunshineSyncAdapter.syncImmediately(getContext());
-
     }
 
     @Override

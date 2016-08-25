@@ -131,11 +131,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             double high = data.getDouble(COL_WEATHER_MAX_TEMP);
             TextView highTempView = (TextView) getActivity().findViewById(R.id.detail_high_textview);
-            highTempView.setText(Utility.formatTemperature(getContext(), high, isMetric));
+            highTempView.setText(Utility.formatTemperature(getContext(), high));
 
             double low = data.getDouble(COL_WEATHER_MIN_TEMP);
             TextView lowTempView = (TextView) getActivity().findViewById(R.id.detail_low_textview);
-            lowTempView.setText(Utility.formatTemperature(getContext(), low, isMetric));
+            lowTempView.setText(Utility.formatTemperature(getContext(), low));
 
             // Humidity
             float humidity = data.getFloat(COL_WEATHER_COLUMN_HUMIDITY);
