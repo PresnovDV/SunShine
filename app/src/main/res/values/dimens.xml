@@ -3,4 +3,11 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="valueSelector_text">30dp</dimen>
+    <dimen name="valueSelector_label_text">14dp</dimen>
+    <dimen name="valueSelector_margin_top">14dp</dimen>
+    <dimen name="valueSelector_button_hMargin">25dp</dimen>
+    <dimen name="valueSelector_button_insideMargin">10dp</dimen>
+
 </resources>

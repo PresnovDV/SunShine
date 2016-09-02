@@ -95,6 +95,13 @@
                 android:id="@+id/detail_pressure_textview"
                 android:fontFamily="sans-serif-light"
                 android:textAppearance="?android:textAppearanceLarge"/>
+            <com.example.android.sunshine.app.ValueSelector
+                android:id="@+id/valueSelector"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp">
+            </com.example.android.sunshine.app.ValueSelector>
         </LinearLayout>
     </LinearLayout>
+
+
 </ScrollView>
