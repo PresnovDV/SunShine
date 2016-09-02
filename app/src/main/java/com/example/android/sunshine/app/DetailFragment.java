@@ -99,11 +99,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     private Intent createShareIntent(){
+        // Define the text of the forecast.
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT,
-                mForecastStr + FORECAST_SHARE_HASHTAG);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, mForecastStr);
         return shareIntent;
     }
 
@@ -163,11 +163,18 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             String forecast = data.getString(COL_WEATHER_DESC);
             TextView descriptionView = (TextView) getActivity().findViewById(R.id.detail_forecast_textview);
             descriptionView.setText(forecast);
+
+            if (mShareActionProvider != null) {
+                mForecastStr = String.format(getContext().getString(R.string.format_share_msg),
+                        Utility.formatDate(date),
+                        forecast,
+                        Utility.formatTemperature(getContext(), high),
+                        Utility.formatTemperature(getContext(), low));
+                mShareActionProvider.setShareIntent(createShareIntent());
+            }
+
         }
 
-//            if (mShareActionProvider != null) {
-//                mShareActionProvider.setShareIntent(createShareIntent());
-//            }
     }
 
     @Override
